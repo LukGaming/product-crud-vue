@@ -42,6 +42,8 @@ export const product = {
   },
   actions: {
     async validateForm({ commit, state, getters }, payload) {
+      $http.get("http://localhost:5120/api/Product")
+        .then((res) => console.log(res));
       let order = 0;
       switch (payload) {
         case "name":
@@ -133,6 +135,7 @@ export const product = {
             categoryId: 1,
           };
           console.log(payload);
+
           $http.post("Product", { ...payload }).then((res) => console.log(res));
         }
       }
