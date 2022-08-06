@@ -1,6 +1,6 @@
 <template>
   <div>
-    {{ productErrors }}
+    <CategoryDialog />
     <v-row no-gutters>
       <v-col>
         <h1>Creating Products</h1>
@@ -59,17 +59,32 @@
         </v-row>
         <v-row no-gutters class="mt-1">
           <v-col>
-            <v-autocomplete
-              :items="categories"
-              v-model="switchCategory"
-              item-text="categoryName"
-              :menu-props="{ bottom: true, offsetY: true }"
-              item-value="id"
-              outlined
-              label="Category"
-              hide-details="auto"
-              @blur="validateForm('category')"
-            ></v-autocomplete>
+            <v-row>
+              <v-col>
+                <v-autocomplete
+                  :items="categories"
+                  v-model="switchCategory"
+                  item-text="categoryName"
+                  :menu-props="{ bottom: true, offsetY: true }"
+                  item-value="id"
+                  outlined
+                  label="Category"
+                  hide-details="auto"
+                  @blur="validateForm('category')"
+                ></v-autocomplete>
+              </v-col>
+              <v-col
+                ><v-btn
+                  color="pink"
+                  dark
+                  x-large
+                  @click="setCategoryDialog({ part: 'dialog', value: true })"
+                >
+                  <v-icon>mdi-plus</v-icon>
+                </v-btn></v-col
+              >
+            </v-row>
+
             <AlertMessages
               class="mt-1"
               v-if="productErrors.category.length > 0"
@@ -85,6 +100,7 @@
               prepend-icon="mdi-camera"
               multiple
               large
+              hide-details="auto"
               @change="handleFilePreview($event), watchInputFilesChange($event)"
             ></v-file-input>
             <AlertMessages
@@ -137,12 +153,13 @@
 </template>
 <script>
 import { mapActions, mapGetters } from "vuex";
+import CategoryDialog from "./CategoryDialog.vue";
 
 // import { Money } from "v-money";
 export default {
   components: {
-    //  Money
-  },
+    CategoryDialog,
+},
   data() {
     return {
       inputFiles: null,
@@ -170,6 +187,7 @@ export default {
       removeImage: "product/removeImage",
       addDataToInputs: "product/addDataToInputs",
       getProductCategories: "product/getProductCategories",
+      setCategoryDialog: "product/setCategoryDialog"
     }),
     watchInputFilesChange(event) {
       this.inputFiles = [];

@@ -9,6 +9,9 @@ export const product = {
       price: 0.0,
       category: null,
     },
+    categoryDialog: {
+      dialog: true,
+    },
     categories: [
       { id: 0, categoryName: "Processor" },
       { id: 1, categoryName: "Memory" },
@@ -18,7 +21,7 @@ export const product = {
       description: "",
       price: "",
       category: "",
-      images: [],
+      images: "",
     },
     categoryForm: {
       categoryName: "",
@@ -29,6 +32,9 @@ export const product = {
     productImages: [],
   },
   getters: {
+    categoryDialog(state) {
+      return state.categoryDialog;
+    },
     canSendFormCategory(state) {
       let canSend = true;
       for (const key in state.categoryErrors) {
@@ -69,6 +75,9 @@ export const product = {
     },
   },
   actions: {
+    setCategoryDialog({ commit }, payload) {
+      commit("setCategoryDialog", payload);
+    },
     getProductCategories({ commit }) {
       $http.get("Category").then((res) => {
         commit("setProductCategories", res.data);
@@ -77,7 +86,7 @@ export const product = {
     setCategoryForm({ commit }, payload) {
       commit("setCategoryForm", payload);
     },
-    validateCategoryForm({ commit, state, getters }, payload) {
+    validateCategoryForm({ commit, state, getters, dispatch }, payload) {
       let order;
       switch (payload) {
         case "name":
@@ -105,9 +114,13 @@ export const product = {
       if (order >= 2) {
         if (getters.canSendFormCategory) {
           console.log("entrando aqui");
-          $http
-            .post("Category", { ...state.categoryForm })
-            .then((res) => console.log(res));
+          $http.post("Category", { ...state.categoryForm }).then((res) => {
+            console.log(res);
+            if (state.categoryDialog.dialog === true) {
+              commit("addCategoryToFinalOfList", res.data);
+              dispatch("setCategoryDialog", { part: "dialog", value: false });
+            }
+          });
         }
       }
     },
@@ -119,6 +132,7 @@ export const product = {
       $http
         .post(`Images?productId=${payload.productId}`, formData)
         .then((res) => console.log(res));
+      //TODO aparecer POPUP
       return commit;
     },
     addDataToInputs({ commit }) {
@@ -260,8 +274,15 @@ export const product = {
     },
   },
   mutations: {
+    addCategoryToFinalOfList(state, payload) {
+      state.product.category = payload.id;
+      state.categories.push(payload);
+    },
+    setCategoryDialog(state, payload) {
+      state.categoryDialog[payload.part] = payload.value;
+    },
     setProductCategories(state, payload) {
-      state.categories = payload
+      state.categories = payload;
     },
     setCategoryErros(state, payload) {
       state.categoryErrors[payload.part] = payload.value;
