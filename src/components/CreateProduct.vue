@@ -77,6 +77,21 @@
             />
           </v-col>
         </v-row>
+        <v-row>
+          <v-col cols="2" v-for="(image, index) in productImages" :key="index">
+            <img :src="image.src" width="300px" height="200px" />
+          </v-col>
+        </v-row>
+        <v-row
+          ><v-col cols="3"
+            ><v-file-input
+              label="Choose Files"
+              filled
+              prepend-icon="mdi-camera"
+              multiple
+              @change="handleFilePreview($event)"
+            ></v-file-input></v-col
+        ></v-row>
         <v-row no-gutters class="mt-1">
           <v-col
             ><v-btn
@@ -116,6 +131,7 @@ export default {
     ...mapActions({
       setProductValue: "product/setProductValue",
       validateForm: "product/validateForm",
+      handleFilePreview: "product/handleFilePreview",
     }),
   },
   computed: {
@@ -123,6 +139,7 @@ export default {
       product: "product/product",
       categories: "product/categories",
       productErrors: "product/productErrors",
+      productImages: "product/productImages",
     }),
     switchProductName: {
       get() {

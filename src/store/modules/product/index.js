@@ -18,8 +18,12 @@ export const product = {
       price: "",
       category: "",
     },
+    productImages: [],
   },
   getters: {
+    productImages(state) {
+      return state.productImages;
+    },
     product(state) {
       return state.product;
     },
@@ -41,9 +45,19 @@ export const product = {
     },
   },
   actions: {
+    handleFilePreview({ commit }, event) {
+      event.forEach((element) => {
+        var reader = new FileReader();
+        reader.onload = function () {
+          var output = element;
+          output.src = reader.result;
+        };
+        reader.readAsDataURL(element);
+        console.log(element);
+        commit("setImageFileToArray", element);
+      });
+    },
     async validateForm({ commit, state, getters }, payload) {
-      $http.get("http://localhost:5120/api/Product")
-        .then((res) => console.log(res));
       let order = 0;
       switch (payload) {
         case "name":
@@ -145,6 +159,9 @@ export const product = {
     },
   },
   mutations: {
+    setImageFileToArray(state, payload) {
+      state.productImages.push(payload);
+    },
     setProductValue(state, payload) {
       state.product[payload.part] = payload.value;
     },
