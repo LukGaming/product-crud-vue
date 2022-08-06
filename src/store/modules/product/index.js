@@ -113,13 +113,12 @@ export const product = {
       }
       if (order >= 2) {
         if (getters.canSendFormCategory) {
-          console.log("entrando aqui");
           $http.post("Category", { ...state.categoryForm }).then((res) => {
-            console.log(res);
             if (state.categoryDialog.dialog === true) {
               commit("addCategoryToFinalOfList", res.data);
               dispatch("setCategoryDialog", { part: "dialog", value: false });
             }
+            commit("clearCategoryForms");
           });
         }
       }
@@ -265,6 +264,7 @@ export const product = {
               files: state.productImages,
               productId: res.data.id,
             });
+            commit("clearProductForms");
           });
         }
       }
@@ -274,6 +274,22 @@ export const product = {
     },
   },
   mutations: {
+    clearProductForms(state) {
+      state.product.name = "";
+      state.product.description = "";
+      state.product.price = "";
+      state.product.category = null;
+      state.images = [];
+      state.productErrors.name = "";
+      state.productErrors.description = "";
+      state.productErrors.price = "";
+      state.productErrors.category = "";
+      state.productErrors.images = "";
+    },
+    clearCategoryForms(state) {
+      state.categoryForm.categoryName = "";
+      state.categoryErrors.categoryName = "";
+    },
     addCategoryToFinalOfList(state, payload) {
       state.product.category = payload.id;
       state.categories.push(payload);
