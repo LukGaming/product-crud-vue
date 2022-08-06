@@ -1,9 +1,9 @@
 <template>
   <div>
-    {{ product }}
     {{ productErrors }}
     <v-row no-gutters>
       <v-col>
+        <h1>Creating Products</h1>
         <v-row no-gutters class="mt-1">
           <v-col>
             <v-text-field
@@ -77,21 +77,47 @@
             />
           </v-col>
         </v-row>
-        <v-row>
-          <v-col cols="2" v-for="(image, index) in productImages" :key="index">
-            <img :src="image.src" width="300px" height="200px" />
-          </v-col>
-        </v-row>
         <v-row
-          ><v-col cols="3"
-            ><v-file-input
+          ><v-col>
+            <v-file-input
               label="Choose Files"
               filled
               prepend-icon="mdi-camera"
               multiple
-              @change="handleFilePreview($event)"
-            ></v-file-input></v-col
+              large
+              @change="handleFilePreview($event), watchInputFilesChange($event)"
+            ></v-file-input>
+            <AlertMessages
+              class="mt-1"
+              v-if="productErrors.images.length > 0"
+              :message="productErrors.images"
+            /> </v-col
         ></v-row>
+        <v-row class="d-flex justify-center">
+          <v-col
+            cols="12"
+            md="4"
+            sm="5"
+            lg="3"
+            xl="2"
+            class="mx-3 image-col"
+            v-for="(image, index) in productImages"
+            :key="index"
+          >
+            <img :src="image.src" width="300px" height="200px" />
+            <v-btn
+              class="icon-delete-image"
+              color="pink"
+              fab
+              dark
+              small
+              @click="removeImage(index), removeInputFile(index)"
+            >
+              <v-icon>mdi-delete</v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
+        Breakpoint: {{ breakPoint }}
         <v-row no-gutters class="mt-1">
           <v-col
             ><v-btn
@@ -104,6 +130,9 @@
         >
       </v-col>
     </v-row>
+    <v-btn color="pink" dark absolute bottom right fab @click="addDataToInputs">
+      <v-icon>mdi-plus</v-icon>
+    </v-btn>
   </div>
 </template>
 <script>
@@ -116,6 +145,7 @@ export default {
   },
   data() {
     return {
+      inputFiles: null,
       price: 123.45,
       money: {
         decimal: ",",
@@ -127,12 +157,28 @@ export default {
       },
     };
   },
+  created() {
+    if (this.$route.name == "create-product") {
+      this.getProductCategories();
+    }
+  },
   methods: {
     ...mapActions({
       setProductValue: "product/setProductValue",
       validateForm: "product/validateForm",
       handleFilePreview: "product/handleFilePreview",
+      removeImage: "product/removeImage",
+      addDataToInputs: "product/addDataToInputs",
+      getProductCategories: "product/getProductCategories",
     }),
+    watchInputFilesChange(event) {
+      this.inputFiles = [];
+      this.inputFiles = event;
+    },
+    removeInputFile(index) {
+      this.inputFiles.splice(index, 1);
+      return index;
+    },
   },
   computed: {
     ...mapGetters({
@@ -141,6 +187,12 @@ export default {
       productErrors: "product/productErrors",
       productImages: "product/productImages",
     }),
+    breakPoint: {
+      get() {
+        return this.$vuetify.breakpoint.name;
+      },
+    },
+
     switchProductName: {
       get() {
         return this.product.name;
@@ -176,4 +228,13 @@ export default {
   },
 };
 </script>
-<style></style>
+<style>
+.image-col {
+  position: relative;
+}
+.icon-delete-image {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+}
+</style>
