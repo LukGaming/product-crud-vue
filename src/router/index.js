@@ -1,26 +1,32 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import Vue from "vue";
+import VueRouter from "vue-router";
 
-Vue.use(VueRouter)
-import CreateProduct from "@/components/Product/CreateProduct.vue"
-import CreateCategory from '@/components/Category/CreateCategory.vue'
+Vue.use(VueRouter);
+import CreateProduct from "@/components/Product/CreateProduct.vue";
+import CreateCategory from "@/components/Category/CreateCategory.vue";
+import ProductView from "@/views/ProductView.vue";
 const routes = [
   {
-    path: '/product/create',
-    name: 'create-product',
-    component: CreateProduct
+    path: "/product",
+    name: "product",
+    component: ProductView,
   },
   {
-    path: '/category/create',
-    name: 'create-category',
-    component: CreateCategory
+    path: "/product/create",
+    name: "create-product",
+    component: CreateProduct,
   },
-]
+  {
+    path: "/category/create",
+    name: "create-category",
+    component: CreateCategory,
+  },
+];
 
 const router = new VueRouter({
-  mode: 'history',
+  mode: "history",
   base: process.env.BASE_URL,
-  routes
-})
+  routes,
+});
 
-export default router
+export default router;

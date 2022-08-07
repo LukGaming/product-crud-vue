@@ -212,7 +212,6 @@ export default {
         return this.$vuetify.breakpoint.name;
       },
     },
-
     switchProductName: {
       get() {
         return this.product.name;

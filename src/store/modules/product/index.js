@@ -30,8 +30,12 @@ export const product = {
       categoryName: "",
     },
     productImages: [],
+    productList: [],
   },
   getters: {
+    productList(state) {
+      return state.productList;
+    },
     categoryDialog(state) {
       return state.categoryDialog;
     },
@@ -75,6 +79,34 @@ export const product = {
     },
   },
   actions: {
+    deleteProduct({ commit, dispatch }, payload) {
+      $http.delete(`Product?id=${payload}`).then(() => {
+        commit("deleteProduct", payload);
+
+        dispatch(
+          "messages/setDefaultSnackBar",
+          {
+            part: "message",
+            value: "Product deleted successfully.",
+          },
+          { root: true }
+        );
+        dispatch(
+          "messages/setDefaultSnackBar",
+          {
+            part: "snackbar",
+            value: true,
+          },
+          { root: true }
+        );
+      });
+    },
+    getProducts({ commit }) {
+      $http.get("Product").then((res) => {
+        console.log(res.data);
+        commit("setProductList", res.data);
+      });
+    },
     setCategoryDialog({ commit }, payload) {
       commit("setCategoryDialog", payload);
     },
@@ -306,6 +338,15 @@ export const product = {
     },
   },
   mutations: {
+    deleteProduct(state, payload) {
+      const productToRemove = state.productList.findIndex(
+        (x) => x.id === payload
+      );
+      state.productList.splice(productToRemove, 1);
+    },
+    setProductList(state, payload) {
+      state.productList = payload;
+    },
     clearProductForms(state) {
       state.product.name = "";
       state.product.description = "";
