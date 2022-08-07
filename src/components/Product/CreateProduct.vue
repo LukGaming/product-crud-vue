@@ -95,6 +95,7 @@
         <v-row
           ><v-col>
             <v-file-input
+              v-if="canPutImages"
               label="Choose Files"
               filled
               prepend-icon="mdi-camera"
@@ -153,15 +154,16 @@
 </template>
 <script>
 import { mapActions, mapGetters } from "vuex";
-import CategoryDialog from "./CategoryDialog.vue";
+import CategoryDialog from "@/components/Category/CategoryDialog.vue";
 
 // import { Money } from "v-money";
 export default {
   components: {
     CategoryDialog,
-},
+  },
   data() {
     return {
+      canPutImages: true,
       inputFiles: null,
       price: 123.45,
       money: {
@@ -187,7 +189,7 @@ export default {
       removeImage: "product/removeImage",
       addDataToInputs: "product/addDataToInputs",
       getProductCategories: "product/getProductCategories",
-      setCategoryDialog: "product/setCategoryDialog"
+      setCategoryDialog: "product/setCategoryDialog",
     }),
     watchInputFilesChange(event) {
       this.inputFiles = [];

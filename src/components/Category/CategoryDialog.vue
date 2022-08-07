@@ -13,8 +13,7 @@
 </template>
 <script>
 import { mapActions, mapGetters } from "vuex";
-import CreateCategory from "./CreateCategory.vue";
-
+import CreateCategory from "@/components/Category/CreateCategory.vue";
 export default {
   components: {
     CreateCategory,

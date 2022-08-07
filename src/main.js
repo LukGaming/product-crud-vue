@@ -7,7 +7,7 @@ import router from "./router";
 import "./plugins/v-money";
 import "./store/index";
 Vue.config.productionTip = false;
-import AlertMessages from "./components/AlertMessages.vue";
+import AlertMessages from "@/components/Utils/AlertMessages.vue";
 
 Vue.component("AlertMessages", AlertMessages);
 new Vue({

@@ -2,8 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
-import CreateProduct from '../components/CreateProduct.vue'
-import CreateCategory from '../components/CreateCategory.vue'
+import CreateProduct from "@/components/Product/CreateProduct.vue"
+import CreateCategory from '@/components/Category/CreateCategory.vue'
 const routes = [
   {
     path: '/product/create',

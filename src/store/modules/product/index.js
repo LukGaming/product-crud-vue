@@ -10,7 +10,7 @@ export const product = {
       category: null,
     },
     categoryDialog: {
-      dialog: true,
+      dialog: false,
     },
     categories: [
       { id: 0, categoryName: "Processor" },
@@ -118,6 +118,22 @@ export const product = {
               commit("addCategoryToFinalOfList", res.data);
               dispatch("setCategoryDialog", { part: "dialog", value: false });
             }
+            dispatch(
+              "messages/setDefaultSnackBar",
+              {
+                part: "snackbar",
+                value: true,
+              },
+              { root: true }
+            );
+            dispatch(
+              "messages/setDefaultSnackBar",
+              {
+                part: "message",
+                value: "Category created successfully.",
+              },
+              { root: true }
+            );
             commit("clearCategoryForms");
           });
         }
@@ -264,6 +280,22 @@ export const product = {
               files: state.productImages,
               productId: res.data.id,
             });
+            dispatch(
+              "messages/setDefaultSnackBar",
+              {
+                part: "snackbar",
+                value: true,
+              },
+              { root: true }
+            );
+            dispatch(
+              "messages/setDefaultSnackBar",
+              {
+                part: "message",
+                value: "Product created successfully.",
+              },
+              { root: true }
+            );
             commit("clearProductForms");
           });
         }
@@ -277,7 +309,7 @@ export const product = {
     clearProductForms(state) {
       state.product.name = "";
       state.product.description = "";
-      state.product.price = "";
+      state.product.price = "R$ 1.111.111,11";
       state.product.category = null;
       state.images = [];
       state.productErrors.name = "";
@@ -285,6 +317,7 @@ export const product = {
       state.productErrors.price = "";
       state.productErrors.category = "";
       state.productErrors.images = "";
+      state.productImages = [];
     },
     clearCategoryForms(state) {
       state.categoryForm.categoryName = "";
@@ -292,7 +325,6 @@ export const product = {
     },
     addCategoryToFinalOfList(state, payload) {
       state.product.category = payload.id;
-      state.categories.push(payload);
     },
     setCategoryDialog(state, payload) {
       state.categoryDialog[payload.part] = payload.value;
